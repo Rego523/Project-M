@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyq3avorwpqpt"]
+
+[ext_resource type="Script" path="res://Scenes/TitleScreen.gd" id="1_8sjk2"]
+[ext_resource type="Texture2D" uid="uid://7semjtmq5e3a" path="res://Art/2D/TitleScreen.aseprite" id="1_ug86y"]
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8sjk2")
+
+[node name="BGTitleScreen" type="Sprite2D" parent="."]
+texture = ExtResource("1_ug86y")
+centered = false
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_left = 162.0
+offset_top = 21.0
+offset_right = 279.0
+offset_bottom = 157.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Jugar" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Jugar"
+
+[node name="Opciones" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Opciones"
+
+[node name="Creditos" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Créditos"
+
+[node name="Salir del Juego" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Salir del Juego"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Jugar" to="." method="_on_jugar_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Opciones" to="." method="_on_opciones_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Creditos" to="." method="_on_creditos_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Salir del Juego" to="." method="_on_salir_del_juego_pressed"]

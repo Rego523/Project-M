@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://becovyr70toth"]
+
+[ext_resource type="Script" path="res://Scenes/save_selection_screen.gd" id="1_yispb"]
+[ext_resource type="Texture2D" uid="uid://ou1vctrk6kao" path="res://Art/2D/SaveSelection.aseprite" id="2_57naa"]
+
+[node name="SaveSelectionScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yispb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(160, 90)
+texture = ExtResource("2_57naa")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_left = 126.0
+offset_top = 143.0
+offset_right = 197.0
+offset_bottom = 174.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="BackToTitleScreen" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Go Back"
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 51.0
+offset_right = 90.0
+offset_bottom = 82.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
+layout_mode = 2
+
+[node name="Save1" type="Button" parent="MarginContainer2/VBoxContainer"]
+layout_mode = 2
+text = "Save1"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BackToTitleScreen" to="." method="_on_back_to_title_screen_pressed"]
+[connection signal="pressed" from="MarginContainer2/VBoxContainer/Save1" to="." method="_on_save_1_pressed"]

@@ -1,0 +1,22 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://bbya4j6i18acx"]
+
+[ext_resource type="Texture2D" uid="uid://b32t4votfsxu6" path="res://Art/2D/UI/uiyellow1.png" id="1_i5fd2"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nkn1v"]
+texture = ExtResource("1_i5fd2")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+
+[resource]
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/colors/font_outline_color = Color(1, 1, 1, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 0)
+Label/constants/line_spacing = 3
+Label/constants/outline_size = 0
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Label/constants/shadow_outline_size = 1
+Label/font_sizes/font_size = 5
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_nkn1v")

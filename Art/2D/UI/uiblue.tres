@@ -1,0 +1,14 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://rbxy3mlxtwyf"]
+
+[ext_resource type="Texture2D" uid="uid://ba0omrx6g1mvd" path="res://Art/2D/UI/uiblue1.png" id="1_qf7bd"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8fmta"]
+texture = ExtResource("1_qf7bd")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+
+[resource]
+Label/font_sizes/font_size = 5
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_8fmta")
