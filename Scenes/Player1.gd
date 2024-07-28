@@ -1,7 +1,8 @@
 extends CharacterBody3D
 
 @onready var leader : bool
-@onready var follower : bool
+@onready var follower1 : bool
+@onready var follower2 : bool
 
 @onready var pivot = $"../CamOrigin"
 @onready var model = $BodyMesh
@@ -33,11 +34,12 @@ func _ready():
 
 ####################################################################################################
 
-func _set_rol(is_leader, is_follower, target):
+func _set_rol(is_leader, is_follower1, is_follower2, target):
 	leader = is_leader
-	follower = is_follower
+	follower1 = is_follower1
+	follower2 = is_follower2
 
-	if is_follower:
+	if is_follower1 or is_follower2:
 		target_character = target
 
 ####################################################################################################
@@ -78,15 +80,25 @@ func _physics_process(delta):
 			var corrected_rotation = atan2(horizontal_velocity.x, horizontal_velocity.z)
 			model.rotation.y = lerp_angle(model.rotation.y, corrected_rotation - PI / 2, rotation_speed * delta)
 
-	elif follower:
+	elif follower1 or follower2:
 		if not map_synced:
 			return # Esperar hasta que el mapa esté sincronizado
 		
+		# Posición del objetivo (líder)
+		var target_position = target_character.global_position
+		# Distancia lateral desde el líder
+		var offset_distance = 3.0
+		
+		if follower1:
+			target_position -= target_character.transform.basis.x * offset_distance # Izquierda
+		elif follower2:
+			target_position += target_character.transform.basis.x * offset_distance # Derecha
+		
 		# Verificar si la distancia al objetivo es mayor que la distancia mínima.
-		var distance_to_target = global_position.distance_to(target_character.global_position)
+		var distance_to_target = global_position.distance_to(target_position)
 		
 		if distance_to_target > min_distance_to_target:
-			set_movement_target(target_character.global_position)
+			set_movement_target(target_position)
 		else:
 			# Si estamos demasiado cerca, detenemos el agente.
 			navigation_agent.set_target_position(global_position)
@@ -105,7 +117,7 @@ func _physics_process(delta):
 		
 		# Girar el modelo para mirar al personaje objetivo si estamos lo suficientemente lejos.
 		if distance_to_target > min_distance_to_target:
-			var direction_to_target = (target_character.global_position - global_position).normalized()
+			var direction_to_target = (target_position - global_position).normalized()
 			var target_rotation = atan2(direction_to_target.x, direction_to_target.z)
 			model.rotation.y = target_rotation - PI / 2
 

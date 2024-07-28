@@ -21,6 +21,6 @@ func _input(event):
 		set_roles(players[leader], players[(leader + 1) % 3], players[(leader + 2) % 3])
 
 func set_roles(new_leader: CharacterBody3D, follower1: CharacterBody3D, follower2: CharacterBody3D):
-	new_leader._set_rol(true, false, new_leader)
-	follower1._set_rol(false, true, new_leader)
-	follower2._set_rol(false, true, follower1)
+	new_leader._set_rol(true, false, false, new_leader)
+	follower1._set_rol(false, true, false, new_leader)
+	follower2._set_rol(false, false, true, new_leader)
