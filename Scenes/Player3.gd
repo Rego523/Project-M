@@ -7,6 +7,11 @@ extends CharacterBody3D
 @onready var pivot = $"../CamOrigin"
 @onready var model = $BodyMesh
 
+@onready var leftReferece = $LeftReference
+@onready var rightReferece = $RightReference
+@onready var stop : bool = true
+@onready var target_position
+
 @export var rotation_speed = 20.0
 
 @export var speed = 10.0
@@ -23,7 +28,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready var target_character: CharacterBody3D
 @export var movement_speed: float = 10.0
-@export var min_distance_to_target: float = 2.0
+@export var min_distance_to_leader: float = 15.0
 
 var map_synced: bool = false
 
@@ -79,29 +84,44 @@ func _physics_process(delta):
 			var horizontal_velocity = Vector3(velocity.x, 0, velocity.z).normalized()
 			var corrected_rotation = atan2(horizontal_velocity.x, horizontal_velocity.z)
 			model.rotation.y = lerp_angle(model.rotation.y, corrected_rotation - PI / 2, rotation_speed * delta)
+			
+			# Puedes comentar estas dos lineas por optimacion si quieres, se encargan de rotar los puntos de referencia.
+			leftReferece.rotation.y = lerp_angle(leftReferece.rotation.y, corrected_rotation - PI / 2, rotation_speed * delta)
+			rightReferece.rotation.y = lerp_angle(rightReferece.rotation.y, corrected_rotation - PI / 2, rotation_speed * delta)
+			
+			# Calcular las nuevas posiciones de las referencias izquierda y derecha
+			var distance_from_model_x = 2.0  # Distancia desde el modelo a las referencias
+			var distance_from_model_z = 3.0
+			var left_position = model.global_position - model.transform.basis.x * distance_from_model_x - model.transform.basis.z * distance_from_model_z
+			var right_position = model.global_position - model.transform.basis.x * distance_from_model_x + model.transform.basis.z * distance_from_model_z
+
+			# Interpolar las posiciones actuales hacia las nuevas posiciones
+			leftReferece.global_position = leftReferece.global_position.lerp(left_position, speed * delta)
+			rightReferece.global_position = rightReferece.global_position.lerp(right_position, speed * delta)
 
 	elif follower1 or follower2:
 		if not map_synced:
 			return # Esperar hasta que el mapa esté sincronizado
 		
-		# Posición del objetivo (líder)
-		var target_position = target_character.global_position
-		# Distancia lateral desde el líder
-		var offset_distance = 3.0
-		
 		if follower1:
-			target_position -= target_character.transform.basis.x * offset_distance # Izquierda
+			target_position = target_character.leftReferece.global_position # Izquierda
 		elif follower2:
-			target_position += target_character.transform.basis.x * offset_distance # Derecha
+			target_position = target_character.rightReferece.global_position # Derecha
 		
-		# Verificar si la distancia al objetivo es mayor que la distancia mínima.
+		
 		var distance_to_target = global_position.distance_to(target_position)
+		var distance_to_leader = global_position.distance_to(target_character.global_position)
 		
-		if distance_to_target > min_distance_to_target:
+		
+		if stop && distance_to_leader > min_distance_to_leader:
+			set_movement_target(target_position)
+			stop = false
+		elif not stop && distance_to_target > 0.8:
 			set_movement_target(target_position)
 		else:
 			# Si estamos demasiado cerca, detenemos el agente.
 			navigation_agent.set_target_position(global_position)
+			stop = true
 		
 		if navigation_agent.is_navigation_finished():
 			return
@@ -116,7 +136,7 @@ func _physics_process(delta):
 			_on_velocity_computed(new_velocity)
 		
 		# Girar el modelo para mirar al personaje objetivo si estamos lo suficientemente lejos.
-		if distance_to_target > min_distance_to_target:
+		if distance_to_target > min_distance_to_leader:
 			var direction_to_target = (target_position - global_position).normalized()
 			var target_rotation = atan2(direction_to_target.x, direction_to_target.z)
 			model.rotation.y = target_rotation - PI / 2

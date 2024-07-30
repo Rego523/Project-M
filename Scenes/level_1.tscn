@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dw54qkeeljbff"]
+[gd_scene load_steps=33 format=3 uid="uid://dw54qkeeljbff"]
 
 [ext_resource type="Script" path="res://Scenes/ControlPlayer.gd" id="1_60jcb"]
 [ext_resource type="MeshLibrary" uid="uid://nim14nhcqqak" path="res://TileSet/GrassTiles.tres" id="1_dka4g"]
@@ -45,6 +45,8 @@ albedo_texture = ExtResource("4_j8mh6")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jnaok"]
 radius = 0.578062
 height = 2.16123
+
+[sub_resource type="BoxMesh" id="BoxMesh_mry6e"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_310lg"]
 albedo_texture = ExtResource("6_uoeyk")
@@ -224,6 +226,14 @@ shape = SubResource("CapsuleShape3D_jnaok")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="ControlPlayer/Player1"]
 
+[node name="LeftReference" type="MeshInstance3D" parent="ControlPlayer/Player1"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -3, 0, 2)
+mesh = SubResource("BoxMesh_mry6e")
+
+[node name="RightReference" type="MeshInstance3D" parent="ControlPlayer/Player1"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 3, 0, 2)
+mesh = SubResource("BoxMesh_mry6e")
+
 [node name="Player2" type="CharacterBody3D" parent="ControlPlayer"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.633, 3, 0)
 script = ExtResource("5_7w065")
@@ -243,6 +253,14 @@ shape = SubResource("CapsuleShape3D_jnaok")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="ControlPlayer/Player2"]
 
+[node name="LeftReference" type="MeshInstance3D" parent="ControlPlayer/Player2"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -3, 0, 2)
+mesh = SubResource("BoxMesh_mry6e")
+
+[node name="RightReference" type="MeshInstance3D" parent="ControlPlayer/Player2"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 3, 0, 2)
+mesh = SubResource("BoxMesh_mry6e")
+
 [node name="Player3" type="CharacterBody3D" parent="ControlPlayer"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.114, 3, 0)
 script = ExtResource("7_knck1")
@@ -261,6 +279,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0252805, 0)
 shape = SubResource("CapsuleShape3D_jnaok")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="ControlPlayer/Player3"]
+
+[node name="LeftReference" type="MeshInstance3D" parent="ControlPlayer/Player3"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -3, 0, 2)
+mesh = SubResource("BoxMesh_mry6e")
+
+[node name="RightReference" type="MeshInstance3D" parent="ControlPlayer/Player3"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 3, 0, 2)
+mesh = SubResource("BoxMesh_mry6e")
 
 [connection signal="velocity_computed" from="ControlPlayer/Player2/NavigationAgent3D" to="ControlPlayer/Player2" method="_on_velocity_computed"]
 [connection signal="velocity_computed" from="ControlPlayer/Player3/NavigationAgent3D" to="ControlPlayer/Player3" method="_on_velocity_computed"]
