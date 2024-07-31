@@ -26,6 +26,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 ####################################################################################################
 
 @onready var navigation_agent: NavigationAgent3D = get_node("NavigationAgent3D")
+@onready var raycast: RayCast3D = $RayCast3D
 
 @onready var target_character: CharacterBody3D
 @onready var new_velocity: Vector3
@@ -37,6 +38,7 @@ func _ready():
 	# Esperar un fotograma antes de marcar el mapa como sincronizado
 	await get_tree().process_frame
 	map_synced = true
+	raycast.enabled = true  # Asegúrate de que el RayCast3D esté habilitado
 
 ####################################################################################################
 
@@ -52,9 +54,7 @@ func _set_rol(is_leader, is_follower1, is_follower2, target):
 
 func _physics_process(delta):
 	if leader:
-		# Gravity.
-		if not is_on_floor():
-			velocity.y -= gravity * delta
+		apply_gravity(delta)
 
 		# Jump.
 		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -106,6 +106,8 @@ func _physics_process(delta):
 		if not map_synced:
 			return # Esperar hasta que el mapa esté sincronizado
 		
+		apply_gravity(delta)
+		
 		if follower1:
 			target_position = target_character.leftReferece.global_position # Izquierda
 		elif follower2:
@@ -123,8 +125,9 @@ func _physics_process(delta):
 		elif not is_follower_stop && distance_to_target > 0.8:
 			set_movement_target(target_position)
 		# Parar
-		elif target_character.is_leader_stop == true:
-			navigation_agent.set_target_position(global_position)
+		else:
+			var ground_position = get_ground_position()  # Obtener la posición del suelo debajo del seguidor
+			set_movement_target(ground_position)
 			is_follower_stop = true
 		
 		if navigation_agent.is_navigation_finished():
@@ -151,8 +154,19 @@ func _physics_process(delta):
 
 ####################################################################################################
 
+func apply_gravity(delta):
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+
 func set_movement_target(movement_target: Vector3):
 	navigation_agent.set_target_position(movement_target)
+
+func get_ground_position():
+	raycast.target_position = Vector3(0, -1000, 0)  # Asegúrate de que el RayCast3D apunte hacia abajo
+	raycast.force_raycast_update()  # Forzar la actualización del RayCast3D
+	if raycast.is_colliding():
+		return raycast.get_collision_point()  # Obtener la posición del punto de colisión
+	return global_position  # Si no hay colisión, devuelve la posición actual
 
 func _on_velocity_computed(safe_velocity: Vector3):
 	velocity = safe_velocity
