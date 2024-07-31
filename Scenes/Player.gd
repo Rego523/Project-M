@@ -9,7 +9,8 @@ extends CharacterBody3D
 
 @onready var leftReferece = $LeftReference
 @onready var rightReferece = $RightReference
-@onready var stop : bool = true
+@onready var is_follower_stop : bool = true
+@onready var is_leader_stop : bool = true
 @onready var target_position
 
 @export var rotation_speed = 20.0
@@ -27,7 +28,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var navigation_agent: NavigationAgent3D = get_node("NavigationAgent3D")
 
 @onready var target_character: CharacterBody3D
-@export var movement_speed: float = 10.0
+@onready var new_velocity: Vector3
 @export var min_distance_to_leader: float = 15.0
 
 var map_synced: bool = false
@@ -72,8 +73,10 @@ func _physics_process(delta):
 		# Aplicar aceleración y desaceleración
 		if dir.length() > 0:
 			velocity = velocity.lerp(dir * speed, acceleration * delta)
+			is_leader_stop = false
 		else:
 			velocity = velocity.lerp(Vector3.ZERO, deceleration * delta)
+			is_leader_stop = true
 		velocity.y = vy
 
 		move_and_slide()
@@ -112,31 +115,36 @@ func _physics_process(delta):
 		var distance_to_target = global_position.distance_to(target_position)
 		var distance_to_leader = global_position.distance_to(target_character.global_position)
 		
-		
-		if stop && distance_to_leader > min_distance_to_leader:
+		# Arrancar
+		if is_follower_stop && distance_to_leader > min_distance_to_leader:
 			set_movement_target(target_position)
-			stop = false
-		elif not stop && distance_to_target > 0.8:
+			is_follower_stop = false
+		# Seguir corriendo
+		elif not is_follower_stop && distance_to_target > 0.8:
 			set_movement_target(target_position)
-		else:
-			# Si estamos demasiado cerca, detenemos el agente.
+		# Parar
+		elif target_character.is_leader_stop == true:
 			navigation_agent.set_target_position(global_position)
-			stop = true
+			is_follower_stop = true
 		
 		if navigation_agent.is_navigation_finished():
 			return
 		
 		var next_path_position: Vector3 = navigation_agent.get_next_path_position()
 		var current_agent_position: Vector3 = global_position
-		var new_velocity: Vector3 = (next_path_position - current_agent_position).normalized() * movement_speed
 		
+		if distance_to_target > 1.2:
+			new_velocity  = (next_path_position - current_agent_position).normalized() * 15
+		else:
+			new_velocity= (next_path_position - current_agent_position).normalized() * 10
+			
 		if navigation_agent.avoidance_enabled:
 			navigation_agent.set_velocity(new_velocity)
 		else:
 			_on_velocity_computed(new_velocity)
 		
 		# Girar el modelo para mirar al personaje objetivo si estamos lo suficientemente lejos.
-		if distance_to_target > min_distance_to_leader:
+		if distance_to_leader < min_distance_to_leader:
 			var direction_to_target = (target_position - global_position).normalized()
 			var target_rotation = atan2(direction_to_target.x, direction_to_target.z)
 			model.rotation.y = target_rotation - PI / 2

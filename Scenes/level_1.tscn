@@ -1,14 +1,12 @@
-[gd_scene load_steps=33 format=3 uid="uid://dw54qkeeljbff"]
+[gd_scene load_steps=31 format=3 uid="uid://dw54qkeeljbff"]
 
 [ext_resource type="Script" path="res://Scenes/ControlPlayer.gd" id="1_60jcb"]
 [ext_resource type="MeshLibrary" uid="uid://nim14nhcqqak" path="res://TileSet/GrassTiles.tres" id="1_dka4g"]
 [ext_resource type="Script" path="res://Scenes/CamOrigin.gd" id="2_a1rlu"]
-[ext_resource type="Script" path="res://Scenes/Player1.gd" id="2_dm44j"]
+[ext_resource type="Script" path="res://Scenes/Player.gd" id="2_dm44j"]
 [ext_resource type="Texture2D" uid="uid://dlcqv1mdarrbf" path="res://Art/2D/Materiales/red.png" id="3_wtd27"]
 [ext_resource type="Texture2D" uid="uid://rqjg8q8deuf0" path="res://Art/2D/Materiales/white.png" id="4_j8mh6"]
-[ext_resource type="Script" path="res://Scenes/Player2.gd" id="5_7w065"]
 [ext_resource type="Texture2D" uid="uid://ng4b38uobgil" path="res://Art/2D/Materiales/blue.png" id="6_uoeyk"]
-[ext_resource type="Script" path="res://Scenes/Player3.gd" id="7_knck1"]
 [ext_resource type="Texture2D" uid="uid://dwi6a18yglc1i" path="res://Art/2D/Materiales/yellow.png" id="8_xdyp8"]
 [ext_resource type="Script" path="res://Scenes/ChangeMenu.gd" id="9_j3qrp"]
 [ext_resource type="Theme" uid="uid://cl5rky8fl8u3t" path="res://Art/2D/UI/uired.tres" id="9_xdrxl"]
@@ -236,7 +234,7 @@ mesh = SubResource("BoxMesh_mry6e")
 
 [node name="Player2" type="CharacterBody3D" parent="ControlPlayer"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.633, 3, 0)
-script = ExtResource("5_7w065")
+script = ExtResource("2_dm44j")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="ControlPlayer/Player2"]
 material_override = SubResource("StandardMaterial3D_310lg")
@@ -263,7 +261,7 @@ mesh = SubResource("BoxMesh_mry6e")
 
 [node name="Player3" type="CharacterBody3D" parent="ControlPlayer"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.114, 3, 0)
-script = ExtResource("7_knck1")
+script = ExtResource("2_dm44j")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="ControlPlayer/Player3"]
 material_override = SubResource("StandardMaterial3D_aaikb")
